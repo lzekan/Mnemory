@@ -10,6 +10,4 @@ public class MnemoryApplication {
 		SpringApplication.run(MnemoryApplication.class, args);
 	}
 
-
-
 }
