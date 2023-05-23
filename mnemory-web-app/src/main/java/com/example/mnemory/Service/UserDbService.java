@@ -33,6 +33,7 @@ public class UserDbService {
         }
 
         potentialUser = findUserByUsername(newUser.getUsername());
+
         if(potentialUser != null) {
             return "Korisnicko ime se vec koristi.";
         }

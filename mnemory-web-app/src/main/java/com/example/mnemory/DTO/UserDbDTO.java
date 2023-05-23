@@ -1,5 +1,6 @@
 package com.example.mnemory.DTO;
 
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
