@@ -21,8 +21,7 @@ public class UserDbController {
 
     @GetMapping("/api/userByUsername")
     private UserDb findUserByUsername(@RequestParam("username") String username) {
-        UserDb user = userDbService.findUserByUsername(username);
-        return user;
+        return userDbService.findUserByUsername(username);
     }
 
     @GetMapping("/api/userByEmail")

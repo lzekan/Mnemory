@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 public interface UserDbRepository extends CrudRepository<UserDb, Long> {
 
     @Query(
-            value = "select * from userdb u where u.iduser= :idUser", nativeQuery = true
+            value = "select * from userdb u where u.id_user= :idUser", nativeQuery = true
     )
     UserDb findUserDbById(@Param("idUser") long idUser);
 

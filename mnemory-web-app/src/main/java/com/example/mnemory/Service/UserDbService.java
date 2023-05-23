@@ -27,6 +27,7 @@ public class UserDbService {
         UserDb potentialUser = null;
 
         potentialUser = findUserByEmail(newUser.getEmail());
+
         if(potentialUser != null) {
             return "Korisnik s unesenim emailom vec postoji.";
         }

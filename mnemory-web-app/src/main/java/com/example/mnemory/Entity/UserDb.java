@@ -11,12 +11,12 @@ import org.springframework.data.annotation.Id;
 @NoArgsConstructor
 @Entity
 public class UserDb {
-    @jakarta.persistence.Id
-    @Id
-    private long idUser;
+
     private String username;
     private String password;
     private String email;
+    @jakarta.persistence.Id
+    private Long idUser;
 
     public UserDb(String username, String password, String email) {
         this.username = username;
@@ -35,4 +35,5 @@ public class UserDb {
     public String toString(){
         return idUser + " " + username + " " + email;
     }
+
 }
