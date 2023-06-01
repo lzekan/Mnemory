@@ -35,7 +35,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <EditText
-            android:id="@+id/username"
+            android:id="@+id/inputUsername"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:background="@drawable/custom_edittext"
@@ -45,7 +45,7 @@
             android:textColorHighlight="@color/cardview_dark_background" />
 
         <EditText
-            android:id="@+id/password"
+            android:id="@+id/inputPassword"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginTop="20dp"
