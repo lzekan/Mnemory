@@ -23,7 +23,7 @@
         tools:layout_editor_absoluteX="0dp">
 
         <EditText
-            android:id="@+id/inputEmail"
+            android:id="@+id/txtEmail"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginTop="20dp"
@@ -35,7 +35,7 @@
 
 
         <EditText
-            android:id="@+id/inputUsername"
+            android:id="@+id/txtUsername"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginTop="20dp"
@@ -46,7 +46,7 @@
             android:textColorHighlight="@color/cardview_dark_background" />
 
         <EditText
-            android:id="@+id/inputPassword"
+            android:id="@+id/txtPassword"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginTop="20dp"
