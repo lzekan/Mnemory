@@ -11,6 +11,11 @@ import lombok.NoArgsConstructor;
 public class Word {
     private String wordName;
     private String defaultWord;
+
+    public void setWordName(String wordName) {
+        this.wordName = wordName;
+    }
+
     private String wordType;
 
     public String getWordName() {
