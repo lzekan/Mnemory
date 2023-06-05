@@ -3,14 +3,14 @@
     <item
         android:id="@+id/nav_main"
         android:icon="@drawable/main"
-        android:title=""
+        android:title="Akcija"
         />
     <item
         android:id="@+id/nav_history"
         android:icon="@drawable/history"
-        android:title="" />
+        android:title="Povijest" />
     <item
         android:id="@+id/nav_profile"
         android:icon="@drawable/avatar"
-        android:title="" />
+        android:title="Profil" />
 </menu>

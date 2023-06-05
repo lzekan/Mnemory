@@ -58,89 +58,92 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Molimo popunite prazna polja.", Toast.LENGTH_SHORT).show();
                 }
 
-                if(inputPassword.getText().length() < 6){
+                else if(inputPassword.getText().length() < 6){
                     Toast.makeText(getApplicationContext(), "Lozinka mora imati bar 6 znakova.", Toast.LENGTH_SHORT).show();
                 }
 
-                if(!validate(String.valueOf(inputEmail.getText()))){
+                else if(!validate(String.valueOf(inputEmail.getText()))){
                     Toast.makeText(getApplicationContext(), "Molimo unesite pravilnu email adresu.", Toast.LENGTH_SHORT).show();
                 }
+                else {
+                    Methods methods = RetrofitClient.getRetrofitInstance().create(Methods.class);
+                    Call<ResponseBody> call = methods.findUserByUsername(String.valueOf(inputUsername.getText()));
 
-                Methods methods = RetrofitClient.getRetrofitInstance().create(Methods.class);
-                Call<ResponseBody> call = methods.findUserByUsername(String.valueOf(inputUsername.getText()));
+                    call.enqueue(new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                            if (response.isSuccessful()) {
+                                try {
+                                    String responseData = response.body().string();
+                                    JSONObject json = new JSONObject(responseData);
 
-                call.enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        if (response.isSuccessful()) {
-                            try {
-                                String responseData = response.body().string();
-                                JSONObject json = new JSONObject(responseData);
+                                    if(json.get("username").toString().length() != 0){
+                                        Toast.makeText(getApplicationContext(), "Korisničko ime se već koristi.", Toast.LENGTH_SHORT).show();
+                                    }
 
-                                if(json.get("username").toString().length() != 0){
-                                    Toast.makeText(getApplicationContext(), "Korisničko ime se već koristi.", Toast.LENGTH_SHORT).show();
-                                }
+                                } catch (Exception e) {
+                                    Call<ResponseBody> call2 = methods.findUserByEmail(String.valueOf(inputEmail.getText()));
 
-                            } catch (Exception e) {
-                                Call<ResponseBody> call2 = methods.findUserByEmail(String.valueOf(inputEmail.getText()));
+                                    call2.enqueue(new Callback<ResponseBody>() {
+                                        @Override
+                                        public void onResponse(Call<ResponseBody> call2, Response<ResponseBody> response) {
+                                            if (response.isSuccessful()) {
+                                                try {
+                                                    String responseData = response.body().string();
+                                                    JSONObject json = new JSONObject(responseData);
 
-                                call2.enqueue(new Callback<ResponseBody>() {
-                                    @Override
-                                    public void onResponse(Call<ResponseBody> call2, Response<ResponseBody> response) {
-                                        if (response.isSuccessful()) {
-                                            try {
-                                                String responseData = response.body().string();
-                                                JSONObject json = new JSONObject(responseData);
+                                                    if(json.get("username").toString() != null){
+                                                        Toast.makeText(getApplicationContext(), "Email adresa se već koristi.", Toast.LENGTH_SHORT).show();
+                                                    }
 
-                                                if(json.get("username").toString() != null){
-                                                    Toast.makeText(getApplicationContext(), "Email adresa se već koristi.", Toast.LENGTH_SHORT).show();
+                                                } catch (Exception e) {
+                                                    UserDTO userDTO = new UserDTO(inputUsername.getText().toString(), inputPassword.getText().toString(),
+                                                            inputEmail.getText().toString());
+                                                    Call<ResponseBody> call3 = methods.addNewUser(userDTO);
+
+                                                    call3.enqueue(new Callback<ResponseBody>() {
+                                                        @Override
+                                                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                                            //Toast.makeText(getApplicationContext(), "Uspjesno kreiran novi korisnik.", Toast.LENGTH_SHORT).show();
+                                                            startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                                                        }
+
+                                                        @Override
+                                                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                                                        }
+                                                    });
                                                 }
-
-                                            } catch (Exception e) {
-                                                UserDTO userDTO = new UserDTO(inputUsername.getText().toString(), inputPassword.getText().toString(),
-                                                        inputEmail.getText().toString());
-                                                Call<ResponseBody> call3 = methods.addNewUser(userDTO);
-
-                                                call3.enqueue(new Callback<ResponseBody>() {
-                                                    @Override
-                                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                                        //Toast.makeText(getApplicationContext(), "Uspjesno kreiran novi korisnik.", Toast.LENGTH_SHORT).show();
-                                                        startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-                                                    }
-
-                                                    @Override
-                                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-                                                    }
-                                                });
                                             }
+                                            else {
+                                                Toast.makeText(getApplicationContext(), "Došlo je do problema u konekciji.", Toast.LENGTH_SHORT).show();
+                                            }
+
                                         }
-                                        else {
-                                            Toast.makeText(getApplicationContext(), "Došlo je do problema u konekciji.", Toast.LENGTH_SHORT).show();
+
+                                        @Override
+                                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                            Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
                                         }
 
-                                    }
-
-                                    @Override
-                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                        Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
-                                    }
-
-                                });
+                                    });
+                                }
                             }
+                            else {
+                                Toast.makeText(getApplicationContext(), "Došlo je do problema u konekciji.", Toast.LENGTH_SHORT).show();
+                            }
+
                         }
-                        else {
-                            Toast.makeText(getApplicationContext(), "Došlo je do problema u konekciji.", Toast.LENGTH_SHORT).show();
+
+                        @Override
+                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                            Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
                         }
 
-                    }
+                    });
+                }
 
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
 
-                });
 
 
 

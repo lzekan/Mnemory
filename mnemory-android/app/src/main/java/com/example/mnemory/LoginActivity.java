@@ -35,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        Button btnLogin = (Button) findViewById(R.id.btnLogin);
+        Button btnLogin = findViewById(R.id.btnLogin);
         TextView linkToRegister = findViewById(R.id.linkToRegister);
         EditText txtUsername = findViewById(R.id.inputUsername);
         EditText txtPassword = findViewById(R.id.inputPassword);
@@ -67,7 +67,6 @@ public class LoginActivity extends AppCompatActivity {
                                 JSONObject json = new JSONObject(responseData);
 
                                 String password = json.get("password").toString();
-                                Log.d(password, txtPassword.getText().toString());
 
                                 if(password.equals(txtPassword.getText().toString())){
                                     Intent intent = new Intent(view.getContext(), MainActivity.class);
@@ -87,7 +86,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Došlo je do problema s konekcijom.", Toast.LENGTH_SHORT).show();
                     }
 
                 });

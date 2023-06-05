@@ -1,54 +1,79 @@
 package com.example.mnemory;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
+
+    private BottomNavigationView bottomNavigationView;
+    private Fragment mainFragment;
+    private Fragment historyFragment;
+    private Fragment profileFragment;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        BottomNavigationView bottomNavigationView;
+        bottomNavigationView = findViewById(R.id.navigation_view);
+        bottomNavigationView.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
 
-        Button btnAdd = findViewById(R.id.btnAdd);
+        mainFragment = new MainFragment();
+        historyFragment = new HistoryFragment();
+        profileFragment = new ProfileFragment();
 
-        btnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LinearLayout linearLayout = findViewById(R.id.linearLayout2);
+        loadFragment(new MainFragment());
 
-                EditText input3 = findViewById(R.id.input3);
-
-                EditText newEditText = new EditText(getApplicationContext());
-                newEditText.setLayoutParams(input3.getLayoutParams());
-                newEditText.setBackground(input3.getBackground());
-                newEditText.setHint("");
-                newEditText.setPadding(input3.getPaddingLeft(), input3.getPaddingTop(), input3.getPaddingRight(), input3.getPaddingBottom());
-                newEditText.setTextColor(input3.getTextColors());
-
-                linearLayout.addView(newEditText);
-            }
-        });
-
-
-
-
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.fragment_container, mainFragment).commit();
     }
 
+    private final BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener =
+            item -> {
+                int itemId = item.getItemId();
+
+                if (itemId == R.id.nav_main) {
+                    loadFragment(new MainFragment());
+                    return true;
+                } else if (itemId == R.id.nav_history) {
+                    loadFragment(new HistoryFragment());
+                    return true;
+                } else if (itemId == R.id.nav_profile) {
+                    loadFragment(new ProfileFragment());
+                    return true;
+                }
+
+                return false;
+            };
+
+    private boolean loadFragment(Fragment fragment) {
+
+        if (fragment != null) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.replace(R.id.fragment_container, fragment);
+            transaction.commit();
+
+            return true;
+        }
+
+        return false;
+    }
+
+
+
 }
+
