@@ -1,6 +1,9 @@
 package com.example.mnemory;
 
 import android.app.AlertDialog;
+import android.content.ContentValues;
+import android.content.DialogInterface;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +11,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -16,10 +21,21 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.mnemory.Helper.DatabaseHelperSQLite;
+import com.example.mnemory.User.UserManager;
+
+import org.w3c.dom.Text;
+
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -30,11 +46,12 @@ public class MainFragment extends Fragment {
 
     private LinearLayout containerLayout;
     private String template = "";
-    private String nextWord = "";
+    private DatabaseHelperSQLite dbHelper = null;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_main, container, false);
+        dbHelper = new DatabaseHelperSQLite(requireContext());
 
         Button btnAdd = view.findViewById(R.id.btnAdd);
         containerLayout = view.findViewById(R.id.containerLayout);
@@ -56,7 +73,15 @@ public class MainFragment extends Fragment {
         btnMinus3.setOnClickListener(v -> removeEditText((View) btnMinus3.getParent()));
 
         Button btnGenerate = view.findViewById(R.id.btnGenerate);
-        btnGenerate.setOnClickListener(v -> generateSentence());
+        btnGenerate.setOnClickListener(v -> {
+            try {
+                generateSentence();
+            } catch (ExecutionException e) {
+                throw new RuntimeException(e);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
 
         return view;
     }
@@ -118,7 +143,7 @@ public class MainFragment extends Fragment {
         }
     }
 
-    private void generateSentence(){
+    private void generateSentence() throws ExecutionException, InterruptedException {
         List<String> listOfWords = new ArrayList<>();
 
         for(int i = 0; i < containerLayout.getChildCount(); i++){
@@ -139,7 +164,16 @@ public class MainFragment extends Fragment {
             Collections.shuffle(listOfWords);
         }
 
-        String template = getTemplate(containerLayout.getChildCount());
+        ExecutorService threadpool = Executors.newCachedThreadPool();
+        Future<String> futureTask = threadpool.submit(() -> getTemplate(containerLayout.getChildCount()));
+
+        while (!futureTask.isDone()) {
+
+        }
+
+        template = futureTask.get();
+        threadpool.shutdown();
+
         List<String> wordTypesInATemplate = List.of(template.split("-"));
 
         Methods methods = RetrofitClient.getRetrofitInstance().create(Methods.class);
@@ -150,11 +184,77 @@ public class MainFragment extends Fragment {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if(response.isSuccessful()){
                     try {
+                        String generatedSentence = response.body().string();
                         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-                        builder.setTitle(template)
-                                .setMessage(response.body().string())
-                                .setPositiveButton("Yes", null)
-                                .setNegativeButton("No", null);
+                        builder.setTitle("Želite li ocijeniti generiranu rečenicu?")
+                                .setMessage(generatedSentence)
+                                .setPositiveButton("Da", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        AlertDialog.Builder ratingBuilder = new AlertDialog.Builder(requireContext());
+                                        View ratingDialogView = getLayoutInflater().inflate(R.layout.rating_dialog_layout, null);
+                                        ratingBuilder.setView(ratingDialogView);
+
+                                        SeekBar ratingSeekBar = ratingDialogView.findViewById(R.id.ratingSeekBar);
+                                        ratingSeekBar.setMax(10);
+                                        ratingSeekBar.setProgress(0);
+                                        
+                                        TextView ratingValueText = ratingDialogView.findViewById(R.id.ratingValueText);
+
+                                        ratingSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                                            @Override
+                                            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                                                ratingValueText.setText(String.valueOf(progress));
+                                            }
+
+                                            @Override
+                                            public void onStartTrackingTouch(SeekBar seekBar) {
+                                                // Not needed for this implementation
+                                            }
+
+                                            @Override
+                                            public void onStopTrackingTouch(SeekBar seekBar) {
+                                                // Not needed for this implementation
+                                            }
+                                        });
+
+
+                                        ratingBuilder.setPositiveButton("Spremi", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+
+                                                Integer idUser = UserManager.getInstance().getCurrentUser().getId();
+                                                String sentence = generatedSentence;
+                                                Timestamp ts = new Timestamp(new Date().getTime());
+                                                String wordsUsed = listOfWords.toString();
+                                                int noOfWords = listOfWords.size();
+                                                int rating = ratingSeekBar.getProgress();
+
+                                                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                                                ContentValues values = new ContentValues();
+
+                                                values.put("idUser", idUser);
+                                                values.put("mnemonicSentence", sentence);
+                                                values.put("dateGenerated", ts.toString());
+                                                values.put("wordsUsed", wordsUsed);
+                                                values.put("noOfWords", noOfWords);
+                                                values.put("rating", rating);
+                                                db.insert("History", null, values);
+                                                db.close();
+
+
+                                            }
+                                        });
+
+                                        ratingBuilder.setNegativeButton("Odustani", null);
+
+                                        AlertDialog ratingDialog = ratingBuilder.create();
+                                        ratingDialog.show();
+
+
+                                    }
+                                })
+                                .setNegativeButton("Ne", null);
 
                         AlertDialog dialog = builder.create();
                         dialog.show();

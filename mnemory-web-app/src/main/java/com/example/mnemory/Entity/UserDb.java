@@ -14,13 +14,29 @@ import org.springframework.data.annotation.Id;
 @Entity
 public class UserDb {
 
-    private String username;
-    private String password;
-    private String email;
     @jakarta.persistence.Id
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String username;
+    private String password;
+
+    private String email;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+
 
     public UserDb(String username, String password, String email) {
         this.username = username;
@@ -38,5 +54,11 @@ public class UserDb {
 
     public Long getId() {
         return id;
+    }
+
+    public boolean isEqual(UserDb other){
+        return this.username.equals(other.getUsername())
+                && this.email.equals(other.getEmail())
+                    && this.password.equals(other.getPassword());
     }
 }

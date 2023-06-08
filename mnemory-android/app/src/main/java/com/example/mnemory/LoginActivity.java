@@ -20,6 +20,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.mnemory.User.User;
+import com.example.mnemory.User.UserManager;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONException;
@@ -51,13 +53,13 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view){
 
-                if(txtUsername.getText().length() == 0 || txtPassword.getText().length() == 0){
+                if(txtUsername.getText().toString().length() == 0 || txtPassword.getText().length() == 0){
                     Toast.makeText(getApplicationContext(), "Molimo popunite prazna polja.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 Methods methods = RetrofitClient.getRetrofitInstance().create(Methods.class);
-                Call<ResponseBody> call = methods.findUserByUsername(String.valueOf(txtUsername.getText()));
+                Call<ResponseBody> call = methods.findUserByUsername(txtUsername.getText().toString().trim());
                 call.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -68,9 +70,15 @@ public class LoginActivity extends AppCompatActivity {
 
                                 String password = json.get("password").toString();
 
-                                if(password.equals(txtPassword.getText().toString())){
+                                if(password.equals(txtPassword.getText().toString().trim())){
+
+                                    User user = new User(Integer.valueOf(json.get("id").toString()), json.get("username").toString(),
+                                            password, json.get("email").toString());
+                                    UserManager.getInstance().setCurrentUser(user);
+
                                     Intent intent = new Intent(view.getContext(), MainActivity.class);
                                     startActivity(intent);
+
                                 } else {
                                     Toast.makeText(getApplicationContext(), "Netočan unos korisničkog imena ili lozinke.", Toast.LENGTH_SHORT).show();
                                 }

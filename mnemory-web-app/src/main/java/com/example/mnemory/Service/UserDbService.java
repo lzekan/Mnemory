@@ -48,4 +48,31 @@ public class UserDbService {
         userDbRepository.save(createNewUser);
         return Math.toIntExact(createNewUser.getId());
     }
+
+    public String updateUser(UserDb updatedUser) {
+
+        UserDb currentUser = userDbRepository.findUserDbById(updatedUser.getId());
+
+        if(currentUser.isEqual(updatedUser)){
+            return "Niste unijeli nijedan drukčiji podatak.";
+        }
+
+        if(findUserByUsername(updatedUser.getUsername()) != null &&
+                findUserByUsername(updatedUser.getUsername()).getId() != currentUser.getId()){
+            return "Korisničko ime se već koristi.";
+        }
+
+        if(findUserByEmail(updatedUser.getEmail()) != null &&
+                findUserByEmail(updatedUser.getEmail()).getId() != currentUser.getId()){
+            return "E-mail adresa je već u uporabi.";
+        }
+
+        userDbRepository.updateUserById(Math.toIntExact(updatedUser.getId()), updatedUser.getUsername(),
+                updatedUser.getPassword(), updatedUser.getEmail());
+
+        return "Korisnikovi podatci su uspješno ažurirani.";
+
+
+
+    }
 }

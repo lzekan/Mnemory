@@ -1,7 +1,7 @@
 package com.example.mnemory;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.example.mnemory.User.User;
+import com.example.mnemory.User.UserDTO;
 
 import java.util.List;
 
@@ -9,9 +9,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
-import retrofit2.http.HTTP;
 import retrofit2.http.POST;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface Methods {
@@ -35,6 +33,9 @@ public interface Methods {
 
     @POST("preference/addPreferences")
     Call<ResponseBody> addPreferencesToUser(@Query("idUser") int idUser, @Query("preferences") List<String> preferences);
+
+    @POST("user/update")
+    Call<ResponseBody> updateUser(@Body User user);
 
 
 }

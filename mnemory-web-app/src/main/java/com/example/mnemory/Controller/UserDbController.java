@@ -34,5 +34,10 @@ public class UserDbController {
         return userDbService.addNewUser(userDbDTO);
     }
 
+    @PostMapping("/api/user/update")
+    private String updateUser(@RequestBody UserDb updatedUser) throws InterruptedException {
+        return userDbService.updateUser(updatedUser);
+    }
+
 
 }

@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="30dp"
-            android:backgroundTint="@color/black"
+            android:backgroundTint="@color/slategray"
             android:paddingHorizontal="50dp"
             android:paddingVertical="15dp"
             android:text="Stvori novi račun"
@@ -90,7 +90,8 @@
                 android:layout_marginLeft="10dp"
                 android:text="Prijavi se."
                 android:textSize="22sp"
-                android:clickable="true"/>
+                android:clickable="true"
+                android:textColor="@color/slategray"/>
 
 
         </LinearLayout>
@@ -109,6 +110,7 @@
         android:textSize="55sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="0dp" />
+        tools:layout_editor_absoluteX="0dp"
+        android:textColor="@color/slategray"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

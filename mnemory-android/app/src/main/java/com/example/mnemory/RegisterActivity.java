@@ -1,9 +1,7 @@
 package com.example.mnemory;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,9 +11,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mnemory.User.User;
+import com.example.mnemory.User.UserDTO;
 import com.example.mnemory.User.UserManager;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -45,8 +43,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         TextView linkToLogin = findViewById(R.id.linkToLogin);
         Button btnRegister = findViewById(R.id.btnRegister);
-
-
 
         linkToLogin.setOnClickListener(v -> startActivity(new Intent(RegisterActivity.this, LoginActivity.class)));
 
@@ -111,8 +107,8 @@ public class RegisterActivity extends AppCompatActivity {
                                                             try {
                                                                 String data = response.body().string();
 
-                                                                User user = new User(Integer.valueOf(data), inputUsername.getText().toString(), inputEmail.getText().toString(),
-                                                                        inputPassword.getText().toString());
+                                                                User user = new User(Integer.valueOf(data), inputUsername.getText().toString(),
+                                                                                inputPassword.getText().toString(), inputEmail.getText().toString());
                                                                 UserManager.getInstance().setCurrentUser(user);
                                                                 startActivity(new Intent(RegisterActivity.this, ChoosePreferenceActivity.class));
                                                             } catch (IOException ex) {

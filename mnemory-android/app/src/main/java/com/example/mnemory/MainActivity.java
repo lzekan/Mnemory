@@ -21,7 +21,6 @@ public class MainActivity extends AppCompatActivity {
     private Fragment historyFragment;
     private Fragment profileFragment;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
