@@ -30,7 +30,7 @@ public class UserDbController {
     }
 
     @PostMapping("/api/user/add")
-    private String addNewUser(@RequestBody UserDbDTO userDbDTO) {
+    private Integer addNewUser(@RequestBody UserDbDTO userDbDTO) {
         return userDbService.addNewUser(userDbDTO);
     }
 

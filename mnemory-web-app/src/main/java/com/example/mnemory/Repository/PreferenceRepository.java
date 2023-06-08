@@ -25,19 +25,19 @@ public interface PreferenceRepository extends CrudRepository<UserDb, Long> {
     @Transactional
     @Modifying
     @Query(
-            value = "insert into haspreferences values (:idUser, :idPreference)", nativeQuery = true
+            value = "insert into haspreference values (:idUser, :preference)", nativeQuery = true
     )
-    void addPreferenceToUser(@Param("idUser") int idUser, @Param("idPreference") int idPreference);
+    void addPreferenceToUser(@Param("idUser") int idUser, @Param("preference") String preference);
 
     @Transactional
     @Modifying
     @Query(
-            value = "delete from haspreferences where iduser = :idUser and idpreference = :idPreference", nativeQuery = true
+            value = "delete from haspreference where iduser = :idUser and preference = :preference", nativeQuery = true
     )
-    void removePreferenceFromUser(@Param("idUser") int idUser, @Param("idPreference") int idPreference);
+    void removePreferenceFromUser(@Param("idUser") int idUser, @Param("preference") String preference);
 
     @Query(
-            value = "select * from haspreferences where iduser = :idUser and idpreference = :idPreference", nativeQuery = true
+            value = "select * from haspreference where iduser = :idUser and preference = :preference", nativeQuery = true
     )
-    String checkIfUserAlreadyHasPreference(@Param("idUser") int idUser, @Param("idPreference") int idPreference);
+    String checkIfUserAlreadyHasPreference(@Param("idUser") int idUser, @Param("preference") String preference);
 }

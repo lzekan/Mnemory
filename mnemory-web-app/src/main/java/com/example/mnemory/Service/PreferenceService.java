@@ -19,8 +19,8 @@ public class PreferenceService {
         return preferenceRepository.getAllPreferences();
     }
 
-    public boolean checkIfAlreadyHasPreference(int idUser, int idPreference){
-        String has = preferenceRepository.checkIfUserAlreadyHasPreference(idUser, idPreference);
+    public boolean checkIfAlreadyHasPreference(int idUser, String preference){
+        String has = preferenceRepository.checkIfUserAlreadyHasPreference(idUser, preference);
 
         if(has != null){
             return true;
@@ -29,21 +29,24 @@ public class PreferenceService {
         return false;
     }
 
-    public String addPreferenceToUser(int idUser, int idPreference){
+    public String addPreferencesToUser(int idUser, List<String> preferences){
 
-        if(!checkIfAlreadyHasPreference(idUser, idPreference)){
+        for(String pref : preferences){
+            if(!checkIfAlreadyHasPreference(idUser, pref)){
+                preferenceRepository.addPreferenceToUser(idUser, pref);
+                continue;
+            }
 
-            preferenceRepository.addPreferenceToUser(idUser, idPreference);
-            return "Korisnikova preferirana tema uspjesno ubacena u bazu.";
+            return "Korisnik već preferira navedenu temu.";
         }
 
-        return "Korisnik vec preferira navedenu temu.";
+        return "Korisnikova preferirana tema uspjesno ubacena u bazu.";
     }
 
-    public String removePreferenceFromUser(int idUser, int idPreference){
+    public String removePreferenceFromUser(int idUser, String preference){
 
-        if(checkIfAlreadyHasPreference(idUser, idPreference)){
-            preferenceRepository.removePreferenceFromUser(idUser, idPreference);
+        if(checkIfAlreadyHasPreference(idUser, preference)){
+            preferenceRepository.removePreferenceFromUser(idUser, preference);
             return "Uspjesno uklonjena preferirana tema.";
         }
 

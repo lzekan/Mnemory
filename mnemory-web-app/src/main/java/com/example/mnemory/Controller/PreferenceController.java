@@ -16,7 +16,7 @@ import java.util.Random;
 public class PreferenceController {
     private final PreferenceService preferenceService;
 
-    @GetMapping("/preference/exampleByType")
+    @GetMapping("api/preference/exampleByType")
     private String getPreferenceExampleByType(@RequestParam("type") String type){
 
         List<String> allExamples = preferenceService.getPreferenceExampleByType(type);
@@ -26,19 +26,19 @@ public class PreferenceController {
 
     }
 
-    @GetMapping("/preference/allPreferences")
+    @GetMapping("api/preference/allPreferences")
     private List<String> getAllPreferences(){
         return preferenceService.getAllPreferences();
     }
 
-    @PostMapping("/preference/addPreference")
-    private String addPreferenceToUser(@RequestParam("idUser") int idUser, @RequestParam("idPref") int idPref){
-        return preferenceService.addPreferenceToUser(idUser, idPref);
+    @PostMapping("api/preference/addPreferences")
+    private String addPreferencesToUser(@RequestParam("idUser") int idUser, @RequestParam("preferences") List<String> preferences){
+        return preferenceService.addPreferencesToUser(idUser, preferences);
     }
 
-    @PostMapping("/preference/removePreference")
-    private String removePreferenceFromUser(@RequestParam("idUser") int idUser, @RequestParam("idPref") int idPref){
-        return preferenceService.removePreferenceFromUser(idUser, idPref);
+    @PostMapping("api/preference/removePreference")
+    private String removePreferenceFromUser(@RequestParam("idUser") int idUser, @RequestParam("preference") String preference){
+        return preferenceService.removePreferenceFromUser(idUser, preference);
     }
 
 }

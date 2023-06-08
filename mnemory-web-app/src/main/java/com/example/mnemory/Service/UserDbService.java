@@ -23,19 +23,19 @@ public class UserDbService {
         return userDbRepository.findUserDbByEmail(email);
     }
 
-    public String addNewUser(UserDbDTO newUser) {
+    public Integer addNewUser(UserDbDTO newUser) {
         UserDb potentialUser = null;
 
         potentialUser = findUserByEmail(newUser.getEmail());
 
         if(potentialUser != null) {
-            return "Korisnik s unesenim emailom vec postoji.";
+            return null;
         }
 
         potentialUser = findUserByUsername(newUser.getUsername());
 
         if(potentialUser != null) {
-            return "Korisnicko ime se vec koristi.";
+            return null;
         }
 
         UserDb createNewUser = UserDb.builder()
@@ -46,6 +46,6 @@ public class UserDbService {
 
 
         userDbRepository.save(createNewUser);
-        return "Korisnik uspjesno dodan.";
+        return Math.toIntExact(createNewUser.getId());
     }
 }
