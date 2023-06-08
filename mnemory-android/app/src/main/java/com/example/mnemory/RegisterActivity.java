@@ -12,6 +12,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.mnemory.User.User;
+import com.example.mnemory.User.UserManager;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -50,9 +53,9 @@ public class RegisterActivity extends AppCompatActivity {
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText inputUsername = (EditText) findViewById(R.id.txtUsername);
-                EditText inputEmail = (EditText) findViewById(R.id.txtEmail);
-                EditText inputPassword = (EditText) findViewById(R.id.txtPassword);
+                EditText inputUsername = findViewById(R.id.txtUsername);
+                EditText inputEmail = findViewById(R.id.txtEmail);
+                EditText inputPassword = findViewById(R.id.txtPassword);
 
                 if(inputUsername.getText().length() == 0 || inputEmail.getText().length() == 0){
                     Toast.makeText(getApplicationContext(), "Molimo popunite prazna polja.", Toast.LENGTH_SHORT).show();
@@ -99,13 +102,23 @@ public class RegisterActivity extends AppCompatActivity {
                                                 } catch (Exception e) {
                                                     UserDTO userDTO = new UserDTO(inputUsername.getText().toString(), inputPassword.getText().toString(),
                                                             inputEmail.getText().toString());
+
                                                     Call<ResponseBody> call3 = methods.addNewUser(userDTO);
 
                                                     call3.enqueue(new Callback<ResponseBody>() {
                                                         @Override
                                                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                                            //Toast.makeText(getApplicationContext(), "Uspjesno kreiran novi korisnik.", Toast.LENGTH_SHORT).show();
-                                                            startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                                                            try {
+                                                                String data = response.body().string();
+
+                                                                User user = new User(Integer.valueOf(data), inputUsername.getText().toString(), inputEmail.getText().toString(),
+                                                                        inputPassword.getText().toString());
+                                                                UserManager.getInstance().setCurrentUser(user);
+                                                                startActivity(new Intent(RegisterActivity.this, ChoosePreferenceActivity.class));
+                                                            } catch (IOException ex) {
+                                                                Toast.makeText(getApplicationContext(), "Došlo je do problema u konekciji.", Toast.LENGTH_SHORT).show();
+                                                            }
+
                                                         }
 
                                                         @Override

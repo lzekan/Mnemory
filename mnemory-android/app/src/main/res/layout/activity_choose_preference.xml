@@ -3,64 +3,117 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="16dp"
-    android:paddingTop="16dp"
-    android:paddingRight="16dp"
-    android:paddingBottom="16dp"
-    tools:context=".MainActivity">
+    android:padding="25dp"
+    tools:context=".ChoosePreferenceActivity">
 
     <ImageView
         android:id="@+id/closeButton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="52dp"
+        android:layout_height="63dp"
         android:layout_above="@+id/preferencesSpinner"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="228dp"
+        android:clickable="true"
+        android:focusable="true"
         android:src="@drawable/close"
         app:layout_constraintBottom_toTopOf="@+id/preferencesSpinner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.979"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        tools:layout_editor_absoluteX="320dp" />
+        app:layout_constraintVertical_bias="0.032" />
 
     <Spinner
         android:id="@+id/preferencesSpinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_centerInParent="true"
-        android:padding="20dp"
+        android:layout_marginTop="150dp"
+        android:background="@drawable/custom_edittext"
+        android:paddingLeft="20dp"
         android:spinnerMode="dropdown"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="236dp"
-        android:prompt="Izaberi"/>
+        app:layout_constraintBottom_toTopOf="@+id/layoutPreferences"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.086"
+        tools:layout_editor_absoluteX="16dp" />
+
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="310dp"
+        android:layout_height="35dp"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:text="Izaberi preferiranu temu..."
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/preferencesSpinner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/preferencesSpinner" />
 
     <LinearLayout
+        android:id="@+id/layoutPreferences"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="216dp"
         android:orientation="vertical"
         android:padding="20dp"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="405dp">
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="16dp">
 
         <EditText
             android:id="@+id/preference1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Preferirana tema 1" />
+            android:hint="Preferirana tema 1"
+            android:focusable="false"/>
 
         <EditText
             android:id="@+id/preference2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginVertical="20dp"
-            android:hint="Preferirana tema 2" />
+            android:hint="Preferirana tema 2"
+            android:focusable="false"/>
 
         <EditText
             android:id="@+id/preference3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Preferirana tema 3" />
+            android:hint="Preferirana tema 3"
+            android:focusable="false"/>
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/pickLater"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:gravity="center"
+        android:text="Izabrat ću kasnije."
+        android:textSize="25dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btnConfirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:backgroundTint="@color/black"
+        android:enabled="true"
+        android:paddingHorizontal="50dp"
+        android:paddingVertical="15dp"
+        android:text="Potvrdi"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/pickLater"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layoutPreferences" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

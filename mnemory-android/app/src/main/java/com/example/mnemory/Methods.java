@@ -30,5 +30,11 @@ public interface Methods {
     @GET("dictionary")
     Call<ResponseBody> getSentenceFromDictionary(@Query("userWords")List<String> userWords, @Query("wordTypes") List<String> wordTypes);
 
+    @GET("preference/allPreferences")
+    Call<ResponseBody> getAllPreferences();
+
+    @POST("preference/addPreferences")
+    Call<ResponseBody> addPreferencesToUser(@Query("idUser") int idUser, @Query("preferences") List<String> preferences);
+
 
 }
