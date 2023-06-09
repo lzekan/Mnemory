@@ -31,7 +31,8 @@
             android:hint="E-mail"
             android:paddingLeft="30dp"
             android:textColor="@color/black"
-            android:textColorHighlight="@color/cardview_dark_background" />
+            android:textColorHighlight="@color/cardview_dark_background"
+            android:singleLine="true"/>
 
 
         <EditText
@@ -43,7 +44,8 @@
             android:hint="Korisničko ime"
             android:paddingLeft="30dp"
             android:textColor="@color/black"
-            android:textColorHighlight="@color/cardview_dark_background" />
+            android:textColorHighlight="@color/cardview_dark_background"
+            android:singleLine="true"/>
 
         <EditText
             android:id="@+id/txtPassword"
@@ -55,7 +57,8 @@
             android:inputType="textPassword"
             android:paddingLeft="30dp"
             android:textColor="@color/black"
-            android:textColorHighlight="@color/cardview_dark_background" />
+            android:textColorHighlight="@color/cardview_dark_background"
+            android:singleLine="true"/>
 
         <Button
             android:id="@+id/btnRegister"

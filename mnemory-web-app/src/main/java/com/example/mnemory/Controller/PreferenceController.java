@@ -41,4 +41,9 @@ public class PreferenceController {
         return preferenceService.removePreferenceFromUser(idUser, preference);
     }
 
+    @GetMapping("api/preference/getPreferencesById")
+    private List<String> getPreferencesById(@RequestParam("idUser") int idUser){
+        return preferenceService.getPreferencesById(idUser);
+    }
+
 }

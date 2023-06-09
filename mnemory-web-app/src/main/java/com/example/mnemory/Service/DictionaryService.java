@@ -17,5 +17,9 @@ public class DictionaryService {
         return dictionaryRepository.getWordsByFirstLetter(firstletter);
     }
 
+    public List<String> getPersonalizedWordsByFirstLetter(String firstletter, String preferencetype){
+        return dictionaryRepository.getPersonalizedWordsByFirstLetter(firstletter, preferencetype);
+    }
+
 
 }

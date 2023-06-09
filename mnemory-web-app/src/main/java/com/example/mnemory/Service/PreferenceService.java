@@ -53,4 +53,8 @@ public class PreferenceService {
         return "Korisnik ne preferira navedenu temu.";
 
     }
+
+    public List<String> getPreferencesById(int idUser){
+        return preferenceRepository.getPreferencesById(idUser);
+    }
 }

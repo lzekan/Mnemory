@@ -26,8 +26,10 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -74,6 +76,9 @@ public class LoginActivity extends AppCompatActivity {
 
                                     User user = new User(Integer.valueOf(json.get("id").toString()), json.get("username").toString(),
                                             password, json.get("email").toString());
+
+                                    List<String> userPreferences = getUserPreferences(user.getId());
+                                    user.setPreferences(userPreferences);
                                     UserManager.getInstance().setCurrentUser(user);
 
                                     Intent intent = new Intent(view.getContext(), MainActivity.class);
@@ -104,6 +109,40 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public List<String> getUserPreferences(int userId){
+        Methods methods = RetrofitClient.getRetrofitInstance().create(Methods.class);
+        Call<ResponseBody> call = methods.getPreferencesById(userId);
+
+        List<String> userPreferences = new ArrayList<>();
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response.isSuccessful()) {
+                    String data = null;
+                    try {
+                        data = response.body().string();
+                        data = data.substring(1, data.length() - 1);
+
+                        for(String pref : List.of(data.split(","))){
+                            userPreferences.add(pref);
+                        }
+
+                    } catch (IOException e) {
+
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+
+        return userPreferences;
     }
 
 

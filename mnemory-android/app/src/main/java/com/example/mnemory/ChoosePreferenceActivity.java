@@ -119,6 +119,7 @@ public class ChoosePreferenceActivity extends AppCompatActivity implements Adapt
                     return;
                 }
 
+                UserManager.getInstance().getCurrentUser().setPreferences(preferences);
                 addPreferencesToUser(preferences, UserManager.getInstance().getCurrentUser().getId());
 
             }

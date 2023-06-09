@@ -81,7 +81,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     }
 
                                 } catch (Exception e) {
-                                    Call<ResponseBody> call2 = methods.findUserByEmail(String.valueOf(inputEmail.getText()));
+                                    Call<ResponseBody> call2 = methods.findUserByEmail(inputEmail.getText().toString());
 
                                     call2.enqueue(new Callback<ResponseBody>() {
                                         @Override

@@ -40,4 +40,9 @@ public interface PreferenceRepository extends CrudRepository<UserDb, Long> {
             value = "select * from haspreference where iduser = :idUser and preference = :preference", nativeQuery = true
     )
     String checkIfUserAlreadyHasPreference(@Param("idUser") int idUser, @Param("preference") String preference);
+
+    @Query(
+            value="select preference from haspreference where iduser = :idUser", nativeQuery = true
+    )
+    List<String> getPreferencesById(@Param("idUser") int idUser);
 }

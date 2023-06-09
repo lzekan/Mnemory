@@ -26,13 +26,17 @@ public interface Methods {
     Call<ResponseBody> getTemplateByLength(@Query("length") int length);
 
     @GET("dictionary")
-    Call<ResponseBody> getSentenceFromDictionary(@Query("userWords")List<String> userWords, @Query("wordTypes") List<String> wordTypes);
+    Call<ResponseBody> getSentenceFromDictionary(@Query("userWords")List<String> userWords, @Query("wordTypes") List<String> wordTypes,
+                                                 @Query("userPreferences") List<String> userPreferences);
 
     @GET("preference/allPreferences")
     Call<ResponseBody> getAllPreferences();
 
     @POST("preference/addPreferences")
     Call<ResponseBody> addPreferencesToUser(@Query("idUser") int idUser, @Query("preferences") List<String> preferences);
+
+    @GET("preference/getPreferencesById")
+    Call<ResponseBody> getPreferencesById(@Query("idUser") int idUser);
 
     @POST("user/update")
     Call<ResponseBody> updateUser(@Body User user);

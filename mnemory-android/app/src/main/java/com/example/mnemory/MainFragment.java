@@ -47,10 +47,14 @@ public class MainFragment extends Fragment {
     private LinearLayout containerLayout;
     private String template = "";
     private DatabaseHelperSQLite dbHelper = null;
+    private Button minusBtnExample;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_main, container, false);
+
+        minusBtnExample = view.findViewById(R.id.minusButton_1);
+
         dbHelper = new DatabaseHelperSQLite(requireContext());
 
         Button btnAdd = view.findViewById(R.id.btnAdd);
@@ -96,15 +100,18 @@ public class MainFragment extends Fragment {
         editText.setHint("Unesi novi pojam...");
         editText.setLayoutParams(regularInput.getLayoutParams());
         editText.setBackgroundResource(R.drawable.custom_edittext);
+        editText.setId(containerLayout.getChildCount() + 1);
         editText.setPadding(regularInput.getPaddingLeft(), 0, 0 , 0);
 
         Button exampleButton = requireView().findViewById(R.id.minusButton);
         Button minusButton = new Button(requireContext());
 
-        minusButton.setLayoutParams(exampleButton.getLayoutParams());
-        minusButton.setText("-");
+        minusButton.setLayoutParams(minusBtnExample.getLayoutParams());
+        minusButton.setText("X");
         minusButton.setTag("minusButton" + containerLayout.getChildCount() + 1);
-        editText.setId(containerLayout.getChildCount() + 1);
+        minusButton.setBackground(minusBtnExample.getBackground());
+        minusButton.setTextColor(getView().getResources().getColor(R.color.white));
+
         minusButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -145,6 +152,10 @@ public class MainFragment extends Fragment {
 
     private void generateSentence() throws ExecutionException, InterruptedException {
         List<String> listOfWords = new ArrayList<>();
+        List<String> userPreferences = UserManager.getInstance().getCurrentUser().getPreferences();
+
+        //Toast.makeText(getContext(), userPreferences.toString(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), " " + userPreferences.toString(), Toast.LENGTH_SHORT).show();
 
         for(int i = 0; i < containerLayout.getChildCount(); i++){
             ViewGroup vg = (ViewGroup) containerLayout.getChildAt(i);
@@ -156,6 +167,11 @@ public class MainFragment extends Fragment {
                 return;
             }
 
+            if(!Character.isAlphabetic(word.charAt(0))){
+                Toast.makeText(requireContext(), "Svi pojmovi trebaju započinjati slovom.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             listOfWords.add(word);
         }
 
@@ -164,20 +180,12 @@ public class MainFragment extends Fragment {
             Collections.shuffle(listOfWords);
         }
 
-        ExecutorService threadpool = Executors.newCachedThreadPool();
-        Future<String> futureTask = threadpool.submit(() -> getTemplate(containerLayout.getChildCount()));
-
-        while (!futureTask.isDone()) {
-
-        }
-
-        template = futureTask.get();
-        threadpool.shutdown();
+        template = getTemplate(containerLayout.getChildCount());
 
         List<String> wordTypesInATemplate = List.of(template.split("-"));
 
         Methods methods = RetrofitClient.getRetrofitInstance().create(Methods.class);
-        Call<ResponseBody> call = methods.getSentenceFromDictionary(listOfWords, wordTypesInATemplate);
+        Call<ResponseBody> call = methods.getSentenceFromDictionary(listOfWords, wordTypesInATemplate, userPreferences);
 
         call.enqueue(new Callback<>() {
             @Override
@@ -186,6 +194,7 @@ public class MainFragment extends Fragment {
                     try {
                         String generatedSentence = response.body().string();
                         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+
                         builder.setTitle("Želite li ocijeniti generiranu rečenicu?")
                                 .setMessage(generatedSentence)
                                 .setPositiveButton("Da", new DialogInterface.OnClickListener() {
@@ -250,8 +259,6 @@ public class MainFragment extends Fragment {
 
                                         AlertDialog ratingDialog = ratingBuilder.create();
                                         ratingDialog.show();
-
-
                                     }
                                 })
                                 .setNegativeButton("Ne", null);
