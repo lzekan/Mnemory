@@ -160,7 +160,7 @@ public class MainFragment extends Fragment {
         for(int i = 0; i < containerLayout.getChildCount(); i++){
             ViewGroup vg = (ViewGroup) containerLayout.getChildAt(i);
 
-            String word = ((EditText) vg.getChildAt(0)).getText().toString().trim();
+            String word = ((EditText) vg.getChildAt(0)).getText().toString().trim().toLowerCase();
 
             if(word.length() == 0){
                 Toast.makeText(requireContext(), "Popunite prazna polja.", Toast.LENGTH_SHORT).show();

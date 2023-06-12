@@ -24,7 +24,7 @@ public class DictionaryController {
         StringBuilder sentence = new StringBuilder();
         boolean foundPref = false;
 
-        if(userPreferences.size() ==     0) {
+        if(userPreferences.size() == 0) {
             foundPref = true;
         }
 
@@ -72,9 +72,6 @@ public class DictionaryController {
                 Word word = getWordFromDictionary(firstLetter, wordType);
                 sentence.append(word.getWordName() + " ");
             }
-
-
-
 
         }
 
