@@ -92,6 +92,7 @@ public class ChoosePreferenceActivity extends AppCompatActivity implements Adapt
                 } else {
                     Toast.makeText(getApplicationContext(), "Doslo je do pogreske u konekciji.", Toast.LENGTH_SHORT).show();
                 }
+
             }
 
             @Override

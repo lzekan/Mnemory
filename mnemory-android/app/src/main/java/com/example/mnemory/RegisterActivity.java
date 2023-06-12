@@ -115,6 +115,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                                 Toast.makeText(getApplicationContext(), "Došlo je do problema u konekciji.", Toast.LENGTH_SHORT).show();
                                                             }
 
+
                                                         }
 
                                                         @Override
@@ -127,6 +128,7 @@ public class RegisterActivity extends AppCompatActivity {
                                             else {
                                                 Toast.makeText(getApplicationContext(), "Došlo je do problema u konekciji.", Toast.LENGTH_SHORT).show();
                                             }
+
 
                                         }
 
@@ -141,6 +143,7 @@ public class RegisterActivity extends AppCompatActivity {
                             else {
                                 Toast.makeText(getApplicationContext(), "Došlo je do problema u konekciji.", Toast.LENGTH_SHORT).show();
                             }
+
 
                         }
 

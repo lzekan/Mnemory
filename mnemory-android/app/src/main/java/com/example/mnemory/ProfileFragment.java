@@ -15,6 +15,9 @@ import com.example.mnemory.User.User;
 import com.example.mnemory.User.UserDTO;
 import com.example.mnemory.User.UserManager;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 import okhttp3.ResponseBody;
@@ -23,6 +26,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ProfileFragment extends Fragment {
+    private static boolean usernameTaken = false;
+    private static boolean emailTaken = false;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
@@ -34,10 +39,8 @@ public class ProfileFragment extends Fragment {
         profileEmail.setText(UserManager.getInstance().getCurrentUser().getEmail());
 
         EditText profilePassword = view.findViewById(R.id.profilePassword);
-        profilePassword.setText(UserManager.getInstance().getCurrentUser().getPassword());
-
         EditText profilePassword2 = view.findViewById(R.id.profilePassword2);
-        profilePassword2.setText(UserManager.getInstance().getCurrentUser().getPassword());
+
 
         Button btnLogout = view.findViewById(R.id.btnLogout);
         btnLogout.setOnClickListener(v -> {
@@ -79,8 +82,6 @@ public class ProfileFragment extends Fragment {
             User updatedUser = new User(UserManager.getInstance().getCurrentUser().getId(),
                     strUsername, strPassword, strEmail);
 
-            //Toast.makeText(view.getContext(), updatedUser.toString(), Toast.LENGTH_SHORT).show();
-
             Methods methods = RetrofitClient.getRetrofitInstance().create(Methods.class);
             Call<ResponseBody> call = methods.updateUser(updatedUser);
 
@@ -89,19 +90,28 @@ public class ProfileFragment extends Fragment {
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     if(response.isSuccessful()){
                         try {
-                            Toast.makeText(inflater.getContext(), response.body().string(), Toast.LENGTH_SHORT).show();
-                        } catch (IOException e) {
 
+                            Toast.makeText(inflater.getContext(), response.body().string(), Toast.LENGTH_SHORT).show();
+
+                            if(response.body().string().equals("Korisnikovi podatci su uspješno ažurirani.")){
+                                UserManager.getInstance().setCurrentUser(updatedUser);
+                            }
+
+
+                        } catch (IOException e) {
+                            throw new RuntimeException();
                         }
-                        UserManager.getInstance().setCurrentUser(updatedUser);
+
 
                         Intent intent = new Intent(getActivity(), MainActivity.class);
                         startActivity(intent);
+
 
                     }
                     else {
                         Toast.makeText(inflater.getContext(), "Doslo je do pogreske", Toast.LENGTH_SHORT).show();
                     }
+
                 }
 
                 @Override
@@ -120,4 +130,6 @@ public class ProfileFragment extends Fragment {
 
         return view;
     }
+
+
 }
